@@ -1,0 +1,43 @@
+<script>  
+window.onload = function() {  
+    function findAndDisableLink() {  
+        var videoElement = document.querySelector('.art-video');  
+        if (videoElement) {  
+            var videoSrc = videoElement.getAttribute('src');  
+            Artplayer.instances[0].destroy(false);  
+            videoElement.remove();  
+            var url = window.location.pathname;  
+            var fileName = url.substring(url.lastIndexOf('/') + 1);  
+
+            var isMobile = window.innerWidth <= 768;  
+            var danmukuFontSize = isMobile ? 2 : 20;  
+
+            var art = new Artplayer({  
+                container: '#video-player',  
+                url: videoSrc,  
+                autoSize: true,  
+                fullscreen: true,  
+                fullscreenWeb: true,  
+                autoOrientation: true,  
+                plugins: [artplayerPluginDanmuku({  
+                    danmuku: 'http://example.com:11001/' + fileName,  //此处修改自己的服务器地址
+                    fontSize: danmukuFontSize,  
+                    opacity: 0.8,  
+                    maxNumber: 10, // 限制同时显示的弹幕数量为10条  
+                    disableTrack: true, // 禁用轨道模式，确保弹幕均匀分布  
+                })],  
+            });  
+            return true;  
+        } else {  
+            return false;  
+        }  
+    }  
+
+    var intervalId = setInterval(function() {  
+        if (findAndDisableLink()) {  
+            console.log("找到播放器");  
+            clearInterval(intervalId);  
+        }  
+    }, 100);  
+};  
+</script>
